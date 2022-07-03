@@ -76,6 +76,11 @@ endif
 test_environment:
 	$(PYTHON_INTERPRETER) test_environment.py
 
+trained_model:
+	python3 src/models/train_model.py
+
+predictions:
+	python3 src/models/predict_model.py $(FILE_NAME)
 #################################################################################
 # PROJECT RULES                                                                 #
 #################################################################################

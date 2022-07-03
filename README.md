@@ -16,3 +16,6 @@ Steps:
         - mv data.csv /data/raw/data.csv &&  mv sample_submission.csv /data/raw/sample_submission.csv
     - Download manually
     - Make sure to add it to the /data/raw folder!
+- To train a baseline model and get a submission.csv file, run on the command line:
+    - make trained_model
+    - make predictions FILE_NAME=submission.csv
