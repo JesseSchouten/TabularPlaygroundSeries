@@ -47,11 +47,19 @@ def get_float_cols(df):
         if 'float' in str(t):
             float_cols.append(c)
     return float_cols
+    
+def get_int_cols(df):
+    int_cols = []
+    for c,t in zip([col for col in df.columns], [col for col in df.dtypes]):
+        if 'int' in str(t):
+            int_cols.append(c)
+    return int_cols
 
 def main(file_name):
     df = read_data()
     float_col_list = get_float_cols(df)
-    X = df[float_col_list]
+    int_col_list = get_int_cols(df)
+    X = df[float_col_list + int_col_list]
     gmm_name = 'my_baseline_model'
     with open('src/models/' + gmm_name + '.pkl', 'rb') as file:
         gmm = pickle.load(file)
