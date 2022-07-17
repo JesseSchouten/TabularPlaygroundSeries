@@ -1,6 +1,7 @@
 import sys
 
 from sklearn.mixture import GaussianMixture
+from sklearn.preprocessing import PowerTransformer
 import pandas as pd
 import numpy as np
 import pickle 
@@ -55,19 +56,30 @@ def get_int_cols(df):
             int_cols.append(c)
     return int_cols
 
+def select_columns(df):
+    important_float_cols = ['f_22', 'f_23', 'f_24', 'f_25', 'f_26', 'f_27', 'f_28']
+    int_col_list = get_int_cols(df)
+    df = df[int_col_list + important_float_cols]
+    return df
+    
+def apply_scaling(df):
+    scaler = PowerTransformer()
+    scaler.fit(df)
+    df = scaler.transform(df)
+    return df
+
 def main(file_name):
     df = read_data()
-    float_col_list = get_float_cols(df)
-    int_col_list = get_int_cols(df)
-    X = df[float_col_list + int_col_list]
-    gmm_name = 'my_baseline_model'
+    df = select_columns(df)
+    df = apply_scaling(df)
+    X = df
+    gmm_name = 'my_model_i2'
     with open('src/models/' + gmm_name + '.pkl', 'rb') as file:
         gmm = pickle.load(file)
 
     pred = gmm.predict(X)
-    submission_df = pd.DataFrame({'Id': df['id'].tolist(), 'Predicted': pred}).set_index('Id')
-    submission_df.to_csv('src/models/' + file_name)
-
+    submissions_df = pd.DataFrame({'Id': [i for i in range(0, len(df))], 'Predicted': pred}).set_index('Id')
+    submissions_df.to_csv('src/models/' + file_name)
 
 if __name__ == '__main__':
     file_name = sys.argv[1]
